@@ -10,20 +10,17 @@ conn = sqlite3.connect('data.sqlite')
 pd.read_sql("""SELECT * FROM sqlite_master""", conn)
 
 # STEP 1
-# Replace None with your code
 df_boston = pd.read_sql("""
                           SELECT
                                 employees.firstName,
-                                employees.lastName,
-                                employees.jobTitle
+                                employees.lastName
                             FROM employees
                             JOIN offices
                                 ON employees.officeCode = offices.officeCode
-                            WHERE offices.city = 'Boston'""",conn).head()
+                            WHERE offices.city = 'Boston'""", conn)
 print(df_boston)
 
 # STEP 2
-# Replace None with your code
 df_zero_emp = pd.read_sql("""
                           SELECT 
                             employees.firstName,
@@ -33,11 +30,10 @@ df_zero_emp = pd.read_sql("""
                           LEFT JOIN offices
                           ON employees.officeCode = offices.officeCode
                           WHERE offices.city IS NULL
-                           """,conn).head()
+                           """, conn)
 print(df_zero_emp)
 
 # STEP 3
-# Replace None with your code
 df_employee = pd.read_sql("""SELECT 
                             employees.firstName, 
                             employees.lastName,
@@ -46,27 +42,24 @@ df_employee = pd.read_sql("""SELECT
                            FROM employees
                           LEFT JOIN offices 
                           ON employees.officeCode = offices.officeCode
-                          ORDER MY employees.firstName, employees.lastName
-                          """, conn).head()
+                          ORDER BY employees.firstName, employees.lastName
+                          """, conn)
 print(df_employee)
 
 # STEP 4
-# Replace None with your code
 df_contacts = pd.read_sql("""SELECT 
-                          customers.customerFirstName,
-                          customers.customerLastName,
-                          customers.phoneNumber
+                          customers.contactFirstName,
+                          customers.contactLastName,
+                          customers.phone,
                           customers.salesRepEmployeeNumber
                            FROM customers
                           LEFT JOIN orders
-                          ON customer.customerNumber = orders.customerNumber
+                          ON customers.customerNumber = orders.customerNumber
                           WHERE orders.customerNumber IS NULL
-                          ORDER BY customer.customerLastName
-                          """, conn).head()
+                          """, conn)
 print(df_contacts)
 
 # STEP 5
-# Replace None with your code
 df_payment = pd.read_sql("""
                             SELECT
                                 customers.contactFirstName,
@@ -77,10 +70,10 @@ df_payment = pd.read_sql("""
                             JOIN payments
                             ON customers.customerNumber = payments.customerNumber
                             ORDER BY CAST(payments.amount AS REAL) DESC;
-                            """, conn).head()
+                            """, conn)
 print(df_payment)
+
 # STEP 6
-# Replace None with your code
 df_credit = pd.read_sql("""
                             SELECT
                                 employees.employeeNumber,
@@ -96,10 +89,10 @@ df_credit = pd.read_sql("""
                                 employees.lastName
                             HAVING AVG(customers.creditLimit) > 90000
                             ORDER BY number_of_customers DESC;
-                            """, conn).head()
+                            """, conn)
 print(df_credit)
+
 # STEP 7
-# Replace None with your code
 df_product_sold = pd.read_sql("""
                         SELECT
                             products.productName,
@@ -110,10 +103,10 @@ df_product_sold = pd.read_sql("""
                         ON products.productCode = orderdetails.productCode
                         GROUP BY products.productName
                         ORDER BY totalunits DESC;
-                        """, conn).head()
+                        """, conn)
 print(df_product_sold)
+
 # STEP 8
-# Replace None with your code
 df_total_customers = pd.read_sql("""
                         SELECT
                             products.productName,
@@ -128,10 +121,10 @@ df_total_customers = pd.read_sql("""
                             products.productName,
                             products.productCode
                         ORDER BY numpurchasers DESC;
-                        """, conn).head()
+                        """, conn)
 print(df_total_customers)
+
 # STEP 9
-# Replace None with your code
 df_customers = pd.read_sql("""
                     SELECT
                         offices.officeCode,
@@ -145,11 +138,11 @@ df_customers = pd.read_sql("""
                     GROUP BY
                         offices.officeCode,
                         offices.city;
-                    """, conn).head()
+                    """, conn)
 print(df_customers)
+
 # STEP 10
-# Replace None with your code
-df_under_20 = df_underperforming = pd.read_sql("""
+df_under_20 = pd.read_sql("""
                     SELECT DISTINCT
                         e.employeeNumber,
                         e.firstName,
@@ -174,7 +167,7 @@ df_under_20 = df_underperforming = pd.read_sql("""
                         GROUP BY od.productCode
                         HAVING COUNT(DISTINCT ord.customerNumber) < 20
                     );
-                    """, conn).head()
-
+                    """, conn)
 print(df_under_20)
+
 conn.close()
